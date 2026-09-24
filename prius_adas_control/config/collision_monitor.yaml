@@ -1,0 +1,77 @@
+collision_monitor:
+  ros__parameters:
+    use_sim_time: true
+
+    enabled: true
+
+    base_frame_id: base_link
+    odom_frame_id: odom
+
+    transform_tolerance: 0.75
+    source_timeout: 1.0
+    stop_pub_timeout: 1.5
+
+    base_shift_correction: true
+    enable_stamped_cmd_vel: false
+
+    cmd_vel_in_topic: /cmd_vel_smoothed
+    cmd_vel_out_topic: /cmd_vel
+
+    state_topic: /collision_monitor_state
+
+    polygons:
+      - SlowZone
+      - StopZone
+
+    SlowZone:
+      type: polygon
+
+      # ROS 2 Humble Collision Monitor format
+      points:
+        - 3.0
+        - 0.90
+        - 3.0
+        - -0.90
+        - 0.35
+        - -0.90
+        - 0.35
+        - 0.90
+
+      action_type: slowdown
+      slowdown_ratio: 0.40
+
+      max_points: 3
+
+      visualize: true
+      polygon_pub_topic: /collision_slow_zone
+      enabled: true
+
+    StopZone:
+      type: polygon
+
+      points:
+        - 1.30
+        - 0.80
+        - 1.30
+        - -0.80
+        - 0.20
+        - -0.80
+        - 0.20
+        - 0.80
+
+      action_type: stop
+
+      max_points: 1
+
+      visualize: true
+      polygon_pub_topic: /collision_stop_zone
+      enabled: true
+
+    observation_sources:
+      - lidar
+
+    lidar:
+      type: scan
+      topic: /prius/scan
+      enabled: true
+      source_timeout: 1.0

@@ -1,0 +1,122 @@
+slam_toolbox:
+  ros__parameters:
+
+    # ==================================================
+    # SIMULATION
+    # ==================================================
+
+    use_sim_time: true
+
+
+    # ==================================================
+    # FRAMES
+    # ==================================================
+
+    map_frame: map
+    odom_frame: odom
+    base_frame: base_link
+
+
+    # ==================================================
+    # LASER
+    # ==================================================
+
+    scan_topic: /prius/scan
+
+    min_laser_range: 0.20
+    max_laser_range: 20.0
+
+
+    # ==================================================
+    # MAPPING
+    # ==================================================
+
+    mode: mapping
+
+    resolution: 0.05
+
+    map_update_interval: 1.0
+
+
+    # ==================================================
+    # TRANSFORM
+    # ==================================================
+
+    transform_publish_period: 0.05
+    transform_timeout: 0.5
+
+    tf_buffer_duration: 30.0
+
+
+    # ==================================================
+    # SCAN PROCESSING
+    # ==================================================
+
+    throttle_scans: 1
+
+    minimum_time_interval: 0.5
+
+    minimum_travel_distance: 0.5
+
+    minimum_travel_heading: 0.5
+
+
+    # ==================================================
+    # SCAN MATCHING
+    # ==================================================
+
+    use_scan_matching: true
+
+    use_scan_barycenter: true
+
+    correlation_search_space_dimension: 0.5
+
+    correlation_search_space_resolution: 0.01
+
+    correlation_search_space_smear_deviation: 0.10
+
+
+    # ==================================================
+    # SCAN LINKING
+    # ==================================================
+
+    link_scan_maximum_distance: 1.5
+
+    link_match_minimum_response_fine: 0.1
+
+
+    # ==================================================
+    # LOOP CLOSING
+    # ==================================================
+
+    do_loop_closing: true
+
+    loop_search_maximum_distance: 3.0
+
+    loop_match_minimum_chain_size: 10
+
+    loop_match_maximum_variance_coarse: 3.0
+
+    loop_match_minimum_response_coarse: 0.35
+
+    loop_match_minimum_response_fine: 0.45
+
+
+    # ==================================================
+    # SOLVER
+    # ==================================================
+
+    solver_plugin: solver_plugins::CeresSolver
+
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+
+    ceres_preconditioner: SCHUR_JACOBI
+
+
+    # ==================================================
+    # DEBUG
+    # ==================================================
+
+    debug_logging: false
+
+    enable_interactive_mode: true

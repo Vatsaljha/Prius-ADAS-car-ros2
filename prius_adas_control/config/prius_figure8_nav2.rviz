@@ -1,0 +1,120 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Map1
+        - /LaserScan1
+        - /RobotModel1
+        - /TF1
+        - /Odom1
+        - /Path1
+      Splitter Ratio: 0.5
+    Tree Height: 600
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 1
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: Map
+      Topic: /map
+      Unreliable: false
+      Use Timestamp: false
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/LaserScan
+      Enabled: true
+      Name: LaserScan
+      Queue Size: 10
+      Selectable: true
+      Size (m): 0.03
+      Style: Points
+      Topic: /prius/scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Enabled: true
+      Name: RobotModel
+      TF Prefix: ""
+      Update Interval: 0
+      Visual Enabled: true
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 0.5
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: false
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Odometry
+      Enabled: true
+      Keep: 1
+      Name: Odom
+      Position Tolerance: 0.1
+      Topic: /odom
+      Unreliable: false
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Line Style: Lines
+      Line Width: 0.03
+      Name: Path
+      Topic: /plan
+      Unreliable: false
+      Value: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: map
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/Interact
+      Hide Inactive Objects: true
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+    - Class: rviz_default_plugins/SetInitialPose
+    - Class: nav2_rviz_plugins/GoalTool
+      Topic: /goal_pose
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 30
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pitch: 1.0
+      Target Frame: map
+      Yaw: 0.0
+Window Geometry:
+  Height: 900
+  Width: 1400
+  X: 100
+  Y: 60

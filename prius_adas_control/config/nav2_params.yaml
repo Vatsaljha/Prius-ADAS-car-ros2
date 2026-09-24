@@ -1,0 +1,455 @@
+# ============================================================
+# NAV2 PARAMETERS FOR PRIUS ACKERMANN ADAS
+# ============================================================
+
+amcl:
+  ros__parameters:
+    use_sim_time: true
+
+# ============================================================
+# PLANNER
+# ============================================================
+
+planner_server:
+  ros__parameters:
+    use_sim_time: true
+    expected_planner_frequency: 10.0
+    planner_plugins: [GridBased]
+
+    GridBased:
+      plugin: nav2_smac_planner/SmacPlannerHybrid
+      tolerance: 0.40
+      downsample_costmap: false
+      downsampling_factor: 1
+      allow_unknown: false
+
+      max_iterations: 100000
+      max_on_approach_iterations: 1000
+      max_planning_time: 3.0
+
+      motion_model_for_search: DUBIN
+      angle_quantization_bins: 72
+
+      # Prius wheelbase = 2.70 m
+      # max steering angle = 0.55 rad
+      # Rmin = L / tan(delta_max) ~= 4.4 m
+      minimum_turning_radius: 4.5
+
+      reverse_penalty: 2.0
+      change_penalty: 0.0
+      non_straight_penalty: 1.2
+      cost_penalty: 1.0
+      retrospective_penalty: 0.015
+
+      lookup_table_size: 20.0
+      analytic_expansion_ratio: 3.5
+      analytic_expansion_max_length: 20.0
+      analytic_expansion_max_cost: 200.0
+
+      smooth_path: true
+      smoother:
+        max_iterations: 500
+        w_smooth: 0.30
+        w_data: 0.20
+        tolerance: 1.0e-10
+        do_refinement: true
+        refinement_num: 2
+
+# ============================================================
+# CONTROLLER
+# ============================================================
+
+controller_server:
+  ros__parameters:
+    use_sim_time: true
+    controller_frequency: 20.0
+
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.001
+    min_theta_velocity_threshold: 0.001
+
+    progress_checker_plugin: progress_checker
+
+    goal_checker_plugins:
+      - general_goal_checker
+
+    controller_plugins:
+      - FollowPath
+
+    progress_checker:
+      plugin: nav2_controller::SimpleProgressChecker
+      required_movement_radius: 0.15
+      movement_time_allowance: 30.0
+
+    general_goal_checker:
+      plugin: nav2_controller::SimpleGoalChecker
+      xy_goal_tolerance: 0.40
+      yaw_goal_tolerance: 0.50
+      stateful: true
+
+    FollowPath:
+      plugin: nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+
+      # Keep the Prius moving enough that RPP does not generate huge
+      # curvature commands at extremely low speed.
+      desired_linear_vel: 0.18
+
+      # IMPORTANT: fixed longer lookahead for this long Ackermann car.
+      # The old 0.35-0.75 m range made the controller react too sharply.
+      use_velocity_scaled_lookahead_dist: false
+      lookahead_dist: 1.20
+      min_lookahead_dist: 1.00
+      max_lookahead_dist: 1.50
+      lookahead_time: 1.0
+
+      transform_tolerance: 1.00
+
+      # Collision Monitor is the final safety layer.
+      use_collision_detection: false
+
+      use_regulated_linear_velocity_scaling: true
+      use_cost_regulated_linear_velocity_scaling: true
+
+      cost_scaling_dist: 0.70
+      cost_scaling_gain: 0.50
+
+      # Must match the planner's physical Prius turning radius.
+      regulated_linear_scaling_min_radius: 4.4
+      regulated_linear_scaling_min_speed: 0.045
+
+      min_approach_linear_velocity: 0.05
+      approach_velocity_scaling_dist: 0.80
+
+      use_rotate_to_heading: false
+      allow_reversing: false
+
+      max_robot_pose_search_dist: 2.5
+      stateful: true
+
+# ============================================================
+# GLOBAL COSTMAP
+# ============================================================
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: map
+      robot_base_frame: base_link
+
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      resolution: 0.05
+
+      rolling_window: false
+      track_unknown_space: false
+
+      # Vehicle dimensions used by the current Prius model.
+      footprint: '[[3.0, 0.95], [3.0, -0.95], [-1.50, -0.95], [-1.50, 0.95]]'
+      footprint_padding: 0.0
+
+      plugins:
+        - static_layer
+        - obstacle_layer
+        - inflation_layer
+
+      static_layer:
+        plugin: nav2_costmap_2d::StaticLayer
+        map_topic: /map
+        map_subscribe_transient_local: true
+        subscribe_to_updates: false
+        transform_tolerance: 0.75
+
+      obstacle_layer:
+        plugin: nav2_costmap_2d::ObstacleLayer
+        observation_sources: lidar
+
+        lidar:
+          topic: /prius/scan
+          data_type: LaserScan
+          marking: true
+          clearing: true
+          obstacle_min_range: 0.20
+          obstacle_max_range: 18.0
+          raytrace_min_range: 0.20
+          raytrace_max_range: 20.0
+          inf_is_valid: false
+          observation_persistence: 0.0
+          expected_update_rate: 0.0
+          min_obstacle_height: 0.0
+          max_obstacle_height: 3.0
+
+      inflation_layer:
+        plugin: nav2_costmap_2d::InflationLayer
+        enabled: true
+        # The footprint's computed inscribed radius is about 0.97 m.
+        # Keep inflation at or above that value to remove the repeated
+        # Nav2 warning and keep the cost field consistent with the footprint.
+        inflation_radius: 0.95
+        cost_scaling_factor: 3.0
+        inflate_unknown: false
+        inflate_around_unknown: false
+
+# ============================================================
+# LOCAL COSTMAP
+# ============================================================
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: odom
+      robot_base_frame: base_link
+
+      update_frequency: 10.0
+      publish_frequency: 5.0
+      rolling_window: true
+
+      # Integer dimensions are required on this Humble setup.
+      width: 12
+      height: 12
+      resolution: 0.05
+
+      footprint: '[[3.0, 0.95], [3.0, -0.95], [-1.50, -0.95], [-1.50, 0.95]]'
+      footprint_padding: 0.0
+
+      plugins:
+        - obstacle_layer
+        - inflation_layer
+
+      obstacle_layer:
+        plugin: nav2_costmap_2d::ObstacleLayer
+        observation_sources: lidar
+
+        lidar:
+          topic: /prius/scan
+          data_type: LaserScan
+          marking: true
+          clearing: true
+          obstacle_min_range: 0.20
+          obstacle_max_range: 18.0
+          raytrace_min_range: 0.20
+          raytrace_max_range: 20.0
+          inf_is_valid: false
+          observation_persistence: 0.0
+          expected_update_rate: 0.0
+          min_obstacle_height: 0.0
+          max_obstacle_height: 3.0
+
+      inflation_layer:
+        plugin: nav2_costmap_2d::InflationLayer
+        enabled: true
+        inflation_radius: 0.55
+        cost_scaling_factor: 3.0
+        inflate_unknown: false
+        inflate_around_unknown: false
+
+# ============================================================
+# SMOOTHER SERVER
+# ============================================================
+
+smoother_server:
+  ros__parameters:
+    use_sim_time: true
+    smoother_plugins: [simple_smoother]
+
+    simple_smoother:
+      plugin: nav2_smoother::SimpleSmoother
+      tolerance: 1.0e-10
+      max_its: 500
+      do_refinement: true
+      refinement_num: 2
+      w_data: 0.20
+      w_smooth: 0.30
+
+# ============================================================
+# BEHAVIOR SERVER
+# ============================================================
+
+behavior_server:
+  ros__parameters:
+    use_sim_time: true
+    cycle_frequency: 10.0
+    behavior_plugins: [spin, backup, wait]
+    spin:
+      plugin: nav2_behaviors/Spin
+
+    backup:
+      plugin: nav2_behaviors/BackUp
+    
+    wait:
+      plugin: nav2_behaviors/Wait
+
+    global_frame: odom
+    robot_base_frame: base_link
+    transform_tolerance: 1.0
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 0.35
+    min_rotational_vel: 0.10
+    rotational_acc_lim: 0.8
+
+# ============================================================
+# BT NAVIGATOR
+# ============================================================
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: true
+
+    global_frame: map
+    robot_base_frame: base_link
+    odom_topic: /odom
+
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    default_nav_to_pose_bt_xml: /opt/ros/humble/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml
+    default_nav_through_poses_bt_xml: /opt/ros/humble/share/nav2_bt_navigator/behavior_trees/navigate_through_poses_w_replanning_and_recovery.xml
+
+    plugin_lib_names:
+      - nav2_compute_path_to_pose_action_bt_node
+      - nav2_compute_path_through_poses_action_bt_node
+      - nav2_smooth_path_action_bt_node
+      - nav2_follow_path_action_bt_node
+      - nav2_spin_action_bt_node
+      - nav2_wait_action_bt_node
+      - nav2_assisted_teleop_action_bt_node
+      - nav2_back_up_action_bt_node
+      - nav2_drive_on_heading_bt_node
+      - nav2_clear_costmap_service_bt_node
+      - nav2_is_stuck_condition_bt_node
+      - nav2_goal_reached_condition_bt_node
+      - nav2_goal_updated_condition_bt_node
+      - nav2_globally_updated_goal_condition_bt_node
+      - nav2_is_path_valid_condition_bt_node
+      - nav2_initial_pose_received_condition_bt_node
+      - nav2_reinitialize_global_localization_service_bt_node
+      - nav2_rate_controller_bt_node
+      - nav2_distance_controller_bt_node
+      - nav2_speed_controller_bt_node
+      - nav2_truncate_path_action_bt_node
+      - nav2_truncate_path_local_action_bt_node
+      - nav2_goal_updater_node_bt_node
+      - nav2_recovery_node_bt_node
+      - nav2_pipeline_sequence_bt_node
+      - nav2_round_robin_node_bt_node
+      - nav2_transform_available_condition_bt_node
+      - nav2_time_expired_condition_bt_node
+      - nav2_path_expiring_timer_condition
+      - nav2_distance_traveled_condition_bt_node
+      - nav2_single_trigger_bt_node
+      - nav2_goal_updated_controller_bt_node
+      - nav2_is_battery_low_condition_bt_node
+      - nav2_navigate_through_poses_action_bt_node
+      - nav2_navigate_to_pose_action_bt_node
+      - nav2_remove_passed_goals_action_bt_node
+      - nav2_planner_selector_bt_node
+      - nav2_controller_selector_bt_node
+      - nav2_goal_checker_selector_bt_node
+      - nav2_controller_cancel_bt_node
+      - nav2_path_longer_on_approach_bt_node
+      - nav2_wait_cancel_bt_node
+      - nav2_spin_cancel_bt_node
+      - nav2_back_up_cancel_bt_node
+      - nav2_assisted_teleop_cancel_bt_node
+      - nav2_drive_on_heading_cancel_bt_node# ============================================================
+# BT NAVIGATOR
+# ============================================================
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: true
+
+    global_frame: map
+    robot_base_frame: base_link
+    odom_topic: /odom
+
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    default_nav_to_pose_bt_xml: /opt/ros/humble/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml
+    default_nav_through_poses_bt_xml: /opt/ros/humble/share/nav2_bt_navigator/behavior_trees/navigate_through_poses_w_replanning_and_recovery.xml
+
+    plugin_lib_names:
+      - nav2_compute_path_to_pose_action_bt_node
+      - nav2_compute_path_through_poses_action_bt_node
+      - nav2_smooth_path_action_bt_node
+      - nav2_follow_path_action_bt_node
+      - nav2_spin_action_bt_node
+      - nav2_wait_action_bt_node
+      - nav2_assisted_teleop_action_bt_node
+      - nav2_back_up_action_bt_node
+      - nav2_drive_on_heading_bt_node
+      - nav2_clear_costmap_service_bt_node
+      - nav2_is_stuck_condition_bt_node
+      - nav2_goal_reached_condition_bt_node
+      - nav2_goal_updated_condition_bt_node
+      - nav2_globally_updated_goal_condition_bt_node
+      - nav2_is_path_valid_condition_bt_node
+      - nav2_initial_pose_received_condition_bt_node
+      - nav2_reinitialize_global_localization_service_bt_node
+      - nav2_rate_controller_bt_node
+      - nav2_distance_controller_bt_node
+      - nav2_speed_controller_bt_node
+      - nav2_truncate_path_action_bt_node
+      - nav2_truncate_path_local_action_bt_node
+      - nav2_goal_updater_node_bt_node
+      - nav2_recovery_node_bt_node
+      - nav2_pipeline_sequence_bt_node
+      - nav2_round_robin_node_bt_node
+      - nav2_transform_available_condition_bt_node
+      - nav2_time_expired_condition_bt_node
+      - nav2_path_expiring_timer_condition
+      - nav2_distance_traveled_condition_bt_node
+      - nav2_single_trigger_bt_node
+      - nav2_goal_updated_controller_bt_node
+      - nav2_is_battery_low_condition_bt_node
+      - nav2_navigate_through_poses_action_bt_node
+      - nav2_navigate_to_pose_action_bt_node
+      - nav2_remove_passed_goals_action_bt_node
+      - nav2_planner_selector_bt_node
+      - nav2_controller_selector_bt_node
+      - nav2_goal_checker_selector_bt_node
+      - nav2_controller_cancel_bt_node
+      - nav2_path_longer_on_approach_bt_node
+      - nav2_wait_cancel_bt_node
+      - nav2_spin_cancel_bt_node
+      - nav2_back_up_cancel_bt_node
+      - nav2_assisted_teleop_cancel_bt_node
+      - nav2_drive_on_heading_cancel_bt_node
+# ============================================================
+# WAYPOINT FOLLOWER
+# ============================================================
+
+waypoint_follower:
+  ros__parameters:
+    use_sim_time: true
+    loop_rate: 20
+    stop_on_failure: false
+    waypoint_task_executor_plugin: wait_at_waypoint
+
+    wait_at_waypoint:
+      plugin: nav2_waypoint_follower::WaitAtWaypoint
+      enabled: false
+      waypoint_pause_duration: 0
+
+# ============================================================
+# VELOCITY SMOOTHER
+# ============================================================
+
+velocity_smoother:
+  ros__parameters:
+    use_sim_time: true
+    smoothing_frequency: 20.0
+    scale_velocities: false
+    feedback: "OPEN_LOOP"
+
+    max_velocity: [0.20, 0.0, 0.20]
+    min_velocity: [0.0, 0.0, -0.20]
+
+    max_accel: [0.08, 0.0, 0.12]
+    max_decel: [-0.15, 0.0, -0.20]
+
+    odom_topic: /odom
+    odom_duration: 0.1
+    velocity_timeout: 1.0
+    deadband_velocity: [0.0, 0.0, 0.0]
+
