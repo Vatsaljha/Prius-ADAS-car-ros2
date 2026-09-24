@@ -1,0 +1,37 @@
+# ROS 2 generated directories
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# C/C++ generated files
+*.o
+*.a
+*.so
+*.so.*
+*.la
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary / backup files
+*.tmp
+*.swp
+*~
+.DS_Store
+
+# ROS / simulation temporary files
+.ros/
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# OS files
+Thumbs.db
