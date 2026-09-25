@@ -1,108 +1,225 @@
-# 🚗 Prius ADAS — ROS 2 + Gazebo Classic
+# Prius ADAS — ROS 2 Autonomous Driving Simulation
 
-> Autonomous Prius ADAS simulation using ROS 2 Humble, Gazebo Classic, SLAM Toolbox, Nav2, camera-based lane detection, LiDAR, and dynamic obstacle avoidance.
+A ROS 2 Humble + Gazebo Classic project for autonomous Prius simulation with **camera-based lane following**, **SLAM + Nav2 navigation**, and **dynamic obstacle avoidance**.
 
-## 🎥 Demo
+## Overview
 
-<!-- Add your final project image here -->
-
-![Prius ADAS Demo](docs/images/final-adas-demo.png)
-
-## ✨ Features
-
-- 🛣️ Autonomous camera-based lane following
-- 📷 Camera lane detection
-- 🧭 SLAM Toolbox localization / mapping support
-- 🗺️ Nav2 autonomous navigation
-- 🧠 Smac Hybrid-A* path planning
-- 🎯 Regulated Pure Pursuit path following
-- 🚧 LiDAR-based obstacle detection
-- 🔄 Nav2 replanning around obstacles
-- 🛑 Collision Monitor safety layer
-- 🚗 Prius Ackermann control interface
-- 🌐 RViz2 visualization
-- 🧪 Gazebo Classic simulation
-
-## 🏗️ System Overview
+The project is divided into two main parts:
 
 ### Part 1 — Autonomous Lane Following
 
+The Prius uses its camera to detect the lane and an autonomous driver to control the vehicle.
+
 ```text
 Camera
-  ↓
+   ↓
 lane_detection
-  ↓
+   ↓
+Lane Information
+   ↓
 autonomous_driver
-  ↓
+   ↓
 /prius/control
-  ↓
+   ↓
 Prius
 ```
 
-### Part 2 — SLAM + Nav2 ADAS
+### Part 2 — ADAS Navigation
+
+The second part uses LiDAR, SLAM Toolbox, Nav2, costmaps, Collision Monitor, and a custom Nav2-to-Prius adapter.
 
 ```text
-LiDAR + Odometry
-      ↓
-SLAM Toolbox
-      ↓
-Map / Localization
-      ↓
-Nav2
- ┌────┼───────────────┐
- │    │               │
- ↓    ↓               ↓
-Smac  Costmaps   Pure Pursuit
- │    │               │
- └────┴──────┬────────┘
-             ↓
-     Collision Monitor
-             ↓
-     nav2_cmd_to_prius
-             ↓
-       /prius/control
-             ↓
-           Prius
+LiDAR / Odometry
+       ↓
+   SLAM Toolbox
+       ↓
+      Map
+       ↓
+      Nav2
+   ↙    ↓    ↘
+Planner Controller Costmaps
+        ↓
+ Collision Monitor
+        ↓
+nav2_cmd_to_prius
+        ↓
+ /prius/control
+        ↓
+      Prius
 ```
 
-## 🚧 Dynamic Obstacle Avoidance
+## Key Features
 
-When an obstacle blocks the current route:
+- Autonomous camera-based lane following
+- SLAM Toolbox integration
+- Nav2 autonomous navigation
+- Smac Hybrid-A* path planning
+- Regulated Pure Pursuit path following
+- Global and local costmaps
+- Collision Monitor safety layer
+- Dynamic obstacle detection through LiDAR
+- Nav2 replanning around blocked routes
+- Alternate-path following by the Prius
+- Gazebo Classic simulation
+- RViz2 visualization
+
+## Project Workflow
+
+### Lane Following
+
+```text
+Camera → Lane Detection → Autonomous Driver → Prius
+```
+
+### ADAS Navigation
+
+```text
+LiDAR → SLAM → Nav2 → Collision Monitor → Prius
+```
+
+### Obstacle Avoidance
 
 ```text
 Obstacle
    ↓
 LiDAR
    ↓
-Costmap update
+Costmap Update
    ↓
-Nav2 replanning
+Nav2 Replanning
    ↓
-Alternate path
+Alternate Path
    ↓
-Prius follows new path
+Prius
 ```
 
-## 📦 ROS 2 Packages
+## Main ROS 2 Nodes
 
-### `prius_adas_control`
+| Node | Purpose |
+|---|---|
+| `lane_detection` | Camera-based lane detection |
+| `autonomous_driver` | Autonomous lane-following control |
+| `nav2_cmd_to_prius` | Converts Nav2 commands to Prius control |
+| `prius_odom_bridge` | Prius odometry support |
+| `laser_scan_merger` | LiDAR scan processing support |
 
-Main package containing the lane-following nodes, Gazebo world launch,
-SLAM launch, Nav2 launch, configuration, URDF, and world assets.
+## Main Launch Files
 
-### `prius_adas_navigation`
+| Launch file | Purpose |
+|---|---|
+| `prius_adas_world.launch.py` | Starts Gazebo + Prius simulation |
+| `slam.launch.py` | Starts SLAM/localization system |
+| `nav2.launch.py` | Starts Nav2 navigation |
 
-Supporting navigation package containing:
+## How to Run
 
-- `prius_odom_bridge`
-- `laser_scan_merger`
+### Part 1 — Lane Following
 
-The Prius world launch starts `prius_odom_bridge` as part of the
-simulation setup. fileciteturn0file3L58-L74 fileciteturn0file0L10-L20
+**Terminal 1 — Gazebo**
 
-## 🚀 How to Run
+```bash
+source /opt/ros/humble/setup.bash
+source ~/prius_ws/install/setup.bash
+source ~/prius_adas_ws/install/setup.bash
 
-### 1. Build
+ros2 launch prius_adas_control prius_adas_world.launch.py
+```
+
+**Terminal 2 — Lane Detection**
+
+```bash
+source /opt/ros/humble/setup.bash
+source ~/prius_ws/install/setup.bash
+source ~/prius_adas_ws/install/setup.bash
+
+ros2 run prius_adas_control lane_detection
+```
+
+**Terminal 3 — Autonomous Driver**
+
+```bash
+source /opt/ros/humble/setup.bash
+source ~/prius_ws/install/setup.bash
+source ~/prius_adas_ws/install/setup.bash
+
+ros2 run prius_adas_control autonomous_driver
+```
+
+### Part 2 — SLAM + Nav2
+
+**Terminal 1 — Gazebo**
+
+```bash
+ros2 launch prius_adas_control prius_adas_world.launch.py
+```
+
+**Terminal 2 — SLAM**
+
+```bash
+ros2 launch prius_adas_control slam.launch.py
+```
+
+**Terminal 3 — Nav2**
+
+```bash
+ros2 launch prius_adas_control nav2.launch.py
+```
+
+**Terminal 4 — RViz2**
+
+```bash
+rviz2
+```
+
+Before launching, source:
+
+```bash
+source /opt/ros/humble/setup.bash
+source ~/prius_ws/install/setup.bash
+source ~/prius_adas_ws/install/setup.bash
+```
+
+## Dynamic Obstacle Avoidance
+
+A navigation goal is sent through RViz2 and the Prius follows the generated Nav2 path.
+
+When an obstacle is placed in the route:
+
+1. LiDAR observes the obstacle.
+2. The costmap marks the obstacle.
+3. Nav2 replans the route.
+4. An alternate path is generated.
+5. The Prius follows the new path.
+
+## Package Structure
+
+```text
+prius_adas_ws/
+├── prius_adas_control/
+│   ├── config/
+│   ├── launch/
+│   ├── models/
+│   ├── prius_adas_control/
+│   │   ├── autonomous_driver.py
+│   │   ├── lane_detection.py
+│   │   └── nav2_cmd_to_prius.py
+│   ├── urdf/
+│   └── worlds/
+│
+├── src/
+│   └── prius_adas_navigation/
+│       └── prius_adas_navigation/
+│           ├── laser_scan_merger.py
+│           └── prius_odom_bridge.py
+│
+├── tools/
+│   ├── add_slam_barriers.py
+│   └── clean_and_add_lidar.py
+│
+└── docs/
+```
+
+## Build
 
 ```bash
 cd ~/prius_adas_ws
@@ -111,146 +228,60 @@ source /opt/ros/humble/setup.bash
 source ~/prius_ws/install/setup.bash
 
 colcon build --symlink-install
+
 source ~/prius_adas_ws/install/setup.bash
 ```
 
-### 2. Part 1 — Lane Following
-
-**Terminal 1**
-
-```bash
-ros2 launch prius_adas_control prius_adas_world.launch.py
-```
-
-**Terminal 2**
-
-```bash
-ros2 run prius_adas_control lane_detection
-```
-
-**Terminal 3**
-
-```bash
-ros2 run prius_adas_control autonomous_driver
-```
-
-### 3. Part 2 — SLAM + Nav2
-
-**Terminal 1**
-
-```bash
-ros2 launch prius_adas_control prius_adas_world.launch.py
-```
-
-**Terminal 2**
-
-```bash
-ros2 launch prius_adas_control slam.launch.py
-```
-
-**Terminal 3**
-
-```bash
-ros2 launch prius_adas_control nav2.launch.py
-```
-
-**Terminal 4**
-
-```bash
-rviz2
-```
-
-## 🔧 Main Components
-
-| Component | Role |
-|---|---|
-| `lane_detection` | Detects lane information from the camera |
-| `autonomous_driver` | Drives the Prius using lane information |
-| `prius_odom_bridge` | Provides Prius odometry support |
-| `laser_scan_merger` | Supporting LiDAR scan processing |
-| `nav2_cmd_to_prius` | Converts Nav2 commands to Prius control |
-| SLAM Toolbox | Localization / mapping |
-| Smac Hybrid-A* | Global path planning |
-| Regulated Pure Pursuit | Path following |
-| Collision Monitor | Final collision-safety layer |
-
-The Nav2 launch connects the controller through the navigation command
-chain, while `nav2_cmd_to_prius` converts navigation commands for the
-Prius control interface. fileciteturn0file4L24-L44 fileciteturn0file5L21-L36
-
-## 🖥️ Software
+## Environment
 
 - Ubuntu 22.04
 - ROS 2 Humble
 - Gazebo Classic
+- RViz2
 - Nav2
 - SLAM Toolbox
-- RViz2
 - Python
 - OpenCV
 
-## 📁 Project Structure
+## Demonstration
 
-```text
-prius_adas_ws/
-├── README.md
-├── prius_adas_control/
-│   ├── config/
-│   ├── launch/
-│   ├── models/
-│   ├── prius_adas_control/
-│   ├── urdf/
-│   └── worlds/
-├── src/
-│   └── prius_adas_navigation/
-├── docs/
-└── tools/
-```
+### Autonomous Lane Following
 
-## 📸 Screenshots
+> Screenshots / video will be added here.
 
-Add your final project screenshots here:
+### SLAM + Nav2
 
-| Lane Following | SLAM + Nav2 |
-|---|---|
-| `docs/images/lane-following.png` | `docs/images/nav2-path.png` |
+> SLAM map, RViz, and Nav2 path screenshots will be added here.
 
-| Obstacle Avoidance | Final Simulation |
-|---|---|
-| `docs/images/obstacle-detected.png` | `docs/images/final-adas-demo.png` |
+### Dynamic Obstacle Avoidance
 
-## 📚 Documentation
+> Obstacle detection and alternate-path screenshots/video will be added here.
 
-- [Architecture](docs/architecture.md)
-- [How to Run](docs/how-to-run.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [Findings](docs/findings.md)
-- [Issue Log](docs/issue-log.md)
-- [Reproduction Notes](docs/reproduction.md)
+## Reference
 
-## 📌 Project Status
+Lane recognition and tracking concepts were studied with:
 
-✅ Autonomous lane following
+https://resources.altium.com/p/lane-recognition-and-tracking-nvidia-jetson-nano
 
-✅ SLAM + Nav2 navigation
+## Documentation
 
-✅ Nav2 path following
+Detailed project notes are available in:
 
-✅ Dynamic obstacle detection
+- `docs/architecture.md`
+- `docs/how-to-run.md`
+- `docs/troubleshooting.md`
+- `docs/findings.md`
+- `docs/issue-log.md`
+- `docs/reproduction.md`
 
-✅ Alternate-path replanning
+## Project Status
 
-✅ Prius control integration
+✅ Autonomous lane following  
+✅ SLAM + Nav2 navigation  
+✅ Nav2 path following  
+✅ Dynamic obstacle avoidance  
+✅ Alternate-path following  
 
-## 📖 Reference
-
-Lane detection development was informed by lane recognition and tracking
-concepts from:
-
-<https://resources.altium.com/p/lane-recognition-and-tracking-nvidia-jetson-nano>
-
-## 👤 Author
+## Author
 
 **Vatsal Jha**
-
-ROS 2 Humble • Gazebo Classic • Nav2 • SLAM Toolbox • RViz2
