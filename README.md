@@ -1,52 +1,26 @@
-# 🚗 Prius ADAS — Autonomous Driving & Obstacle Avoidance Simulation
+# Prius ADAS — ROS 2 + Gazebo Classic
 
-A ROS 2 Humble based Prius ADAS and autonomous driving simulation built in Gazebo Classic.
+A ROS 2 Humble simulation of a Prius-style vehicle implementing
+autonomous lane following and Nav2-based autonomous driving with
+dynamic obstacle avoidance.
 
-This project combines camera-based lane perception, LiDAR-based obstacle sensing, SLAM/localization, Nav2 autonomous navigation, car-like path planning, path following, collision monitoring, and direct vehicle control into a complete simulated autonomous-driving system.
+## Project Overview
 
----
+This project has two main operating modes.
 
-## 📌 Project Overview
+### Part 1 — Autonomous Lane Following
 
-The goal of this project is to simulate an autonomous Prius capable of:
-
-- Understanding the road/lane using a camera
-- Estimating lane geometry
-- Localizing inside a mapped environment
-- Planning a drivable path
-- Following the planned path
-- Detecting obstacles using LiDAR
-- Reacting to changing obstacles
-- Replanning when required
-- Applying collision monitoring
-- Converting navigation commands into Prius vehicle control
-- Physically driving the simulated Prius inside Gazebo
-
-The project is built around a **car-like Ackermann-steering vehicle** rather than treating the Prius as a differential-drive robot.
-
----
-
-## 🎯 Project Objective
-
-The overall autonomous-driving pipeline is:
+The Prius follows the road/lane using the camera-based lane detection system.
 
 ```text
-Environment
-     ↓
-Camera + LiDAR
-     ↓
-Perception
-     ↓
-Lane Understanding + Obstacle Perception
-     ↓
-Localization
-     ↓
-Path Planning
-     ↓
-Path Following
-     ↓
-Safety Monitoring
-     ↓
-Vehicle Control
-     ↓
+Camera
+   ↓
+lane_detection
+   ↓
+lane information
+   ↓
+autonomous_driver
+   ↓
+/prius/control
+   ↓
 Prius
