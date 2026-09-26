@@ -25,18 +25,6 @@ A ROS 2 Humble simulation of a Prius-style car for **autonomous lane following**
 </tr>
 </table>
 
-## 🎬 Videos
-
-[![Lane Following Demo](docs/images/lane_following.png)](docs/videos/lane_following.mp4)
-
-[![Nav2 Navigation Demo](docs/images/nav2_path1.png)](docs/videos/nav2_navigation.mp4)
-
-[![Dynamic Obstacle Avoidance](docs/images/nav2_replan.png)](docs/videos/dynamic_obstacle_avoidance.mp4)
-
-[![Dynamic Obstacle Avoidance](docs/images/obstacle_in_path.png)](docs/videos/dynamic_obstacle_avoidance1.mp4)
-
----
-
 ## ✨ Features
 
 - 🚘 Prius-style vehicle simulation in Gazebo Classic
