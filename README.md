@@ -25,8 +25,6 @@ A ROS 2 Humble simulation of a Prius-style car for **autonomous lane following**
 </tr>
 </table>
 
-<img src="docs/images/nav2path1.png" width="850">
-
 ## 🎬 Videos
 
 [![Lane Following Demo](docs/images/lane_following.png)](docs/videos/lane_following.mp4)
