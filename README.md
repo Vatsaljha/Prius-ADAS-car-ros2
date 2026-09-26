@@ -541,39 +541,6 @@ For large videos, prefer external hosting or Git LFS rather than large normal Gi
 
 ---
 
-## 📚 Documentation
-
-Detailed debugging and development history is kept outside the main README:
-
-- `docs/architecture.md` — final system architecture
-- `docs/how-to-run.md` — run instructions
-- `docs/troubleshooting.md` — common problems and fixes
-- `docs/issue-log.md` — development issues
-- `docs/findings.md` — technical findings
-- `docs/reproduction.md` — reproducibility notes
-
----
-
-## 🚫 Do Not Upload
-
-Keep generated and local-only files out of GitHub:
-
-```text
-build/
-install/
-log/
-__pycache__/
-*.pyc
-*.gv
-*.pdf
-datasets/
-local Gazebo backup files
-```
-
-The project dataset is **not required** for the core ROS 2 simulation and is intentionally excluded.
-
----
-
 ## ✅ Project Status
 
 - ✅ Gazebo Prius simulation
@@ -604,22 +571,8 @@ https://docs.nav2.org/rolling/getting_started/navigation_concepts/
 
 https://docs.nav2.org/rolling/configuration_and_development/configuration_guide/planners_plugins/smac/smac_hybrid/configuring_smac_hybrid/
 
-### Regulated Pure Pursuit
-
-https://docs.nav2.org/rolling/configuration_and_development/configuration_guide/controller_plugins/configuring_regulated_pp/
-
-### Costmaps
-
-https://docs.nav2.org/rolling/configuration_and_development/configuration_guide/core_servers/costmap_2d/
-
-### SLAM Toolbox
-
-https://github.com/SteveMacenski/slam_toolbox
-
 ---
 
 ## 👤 Author
 
 **Vatsal Jha**
-
-ROS 2 Humble · Gazebo Classic · Nav2 · SLAM Toolbox · RViz2 · Python · OpenCV
