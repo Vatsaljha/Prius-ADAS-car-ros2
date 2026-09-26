@@ -4,6 +4,29 @@ A ROS 2 Humble simulation of a Prius-style car for **autonomous lane following**
 
 > **Simulation project:** no physical Prius hardware is required to reproduce the core system.
 
+## 📸 Project Screenshots
+
+<table>
+<tr>
+<td><img src="docs/images/GazeboWorld.png" width="420"></td>
+<td><img src="docs/images/lane_detection.png" width="420"></td>
+</tr>
+<tr>
+<td><img src="docs/images/lane_following.png" width="420"></td>
+<td><img src="docs/images/slam_map.png" width="420"></td>
+</tr>
+<tr>
+<td><img src="docs/images/nav2_path1.png" width="420"></td>
+<td><img src="docs/images/costmap.png" width="420"></td>
+</tr>
+<tr>
+<td><img src="docs/images/obstacle_in_path.png" width="420"></td>
+<td><img src="docs/images/nav2_replan.png" width="420"></td>
+</tr>
+</table>
+
+<img src="docs/images/Prius.png" width="850">
+
 ## 🎬 Videos
 
 [![Lane Following Demo](docs/images/lane_following.png)](docs/videos/lane_following.mp4)
@@ -13,19 +36,6 @@ A ROS 2 Humble simulation of a Prius-style car for **autonomous lane following**
 [![Dynamic Obstacle Avoidance](docs/images/nav2_replan.png)](docs/videos/dynamic_obstacle_avoidance.mp4)
 
 [![Dynamic Obstacle Avoidance](docs/images/obstacle_in_path.png)](docs/videos/dynamic_obstacle_avoidance1.mp4)
-
-
-Recommended screenshots:
-
-- `docs/images/GazeboWorld.png`
-- `docs/images/lane_detection.png`
-- `docs/images/lane_following.png`
-- `docs/images/slam_map.png`
-- `docs/images/nav2_path1.png`
-- `docs/images/costmap.png`
-- `docs/images/obstacle_in_path.png`
-- `docs/images/nav2_replan.png`
-- `docs/images/Prius.png`
 
 ---
 
