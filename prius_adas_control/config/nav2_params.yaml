@@ -169,12 +169,12 @@ global_costmap:
           data_type: LaserScan
           marking: true
           clearing: true
-          obstacle_min_range: 0.20
+          obstacle_min_range: 0.10
           obstacle_max_range: 18.0
-          raytrace_min_range: 0.20
+          raytrace_min_range: 0.10
           raytrace_max_range: 20.0
           inf_is_valid: false
-          observation_persistence: 0.0
+          observation_persistence: 0.30
           expected_update_rate: 0.0
           min_obstacle_height: 0.0
           max_obstacle_height: 3.0
@@ -185,7 +185,7 @@ global_costmap:
         # The footprint's computed inscribed radius is about 0.97 m.
         # Keep inflation at or above that value to remove the repeated
         # Nav2 warning and keep the cost field consistent with the footprint.
-        inflation_radius: 0.95
+        inflation_radius: 1.00
         cost_scaling_factor: 3.0
         inflate_unknown: false
         inflate_around_unknown: false
@@ -201,8 +201,8 @@ local_costmap:
       global_frame: odom
       robot_base_frame: base_link
 
-      update_frequency: 10.0
-      publish_frequency: 5.0
+      update_frequency: 15.0
+      publish_frequency: 10.0
       rolling_window: true
 
       # Integer dimensions are required on this Humble setup.
@@ -226,12 +226,12 @@ local_costmap:
           data_type: LaserScan
           marking: true
           clearing: true
-          obstacle_min_range: 0.20
+          obstacle_min_range: 0.10
           obstacle_max_range: 18.0
-          raytrace_min_range: 0.20
+          raytrace_min_range: 0.10
           raytrace_max_range: 20.0
           inf_is_valid: false
-          observation_persistence: 0.0
+          observation_persistence: 0.30
           expected_update_rate: 0.0
           min_obstacle_height: 0.0
           max_obstacle_height: 3.0
@@ -239,7 +239,7 @@ local_costmap:
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
         enabled: true
-        inflation_radius: 0.55
+        inflation_radius: 0.95
         cost_scaling_factor: 3.0
         inflate_unknown: false
         inflate_around_unknown: false
