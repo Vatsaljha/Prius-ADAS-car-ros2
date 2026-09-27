@@ -571,19 +571,19 @@ prius_maps/
 ```bash
 # Nodes
 ros2 node list
-
+```
 # Topics
 ros2 topic list
-
+```
 # LiDAR
 ros2 topic echo /prius/scan
-
+```
 # Final Prius commands
 ros2 topic echo /prius/control
-
+```
 # Navigation velocity
 ros2 topic echo /cmd_vel
-
+```
 # Installed project executables
 ros2 pkg executables prius_adas_control
 ros2 pkg executables prius_adas_navigation
