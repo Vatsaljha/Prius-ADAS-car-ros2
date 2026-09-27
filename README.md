@@ -564,7 +564,7 @@ prius_maps/
 ├── prius_figure8.pgm
 ├── prius_figure8.posegraph
 └── prius_figure8.yaml
----
+
 
 ## 🔍 Useful Debug Commands
 
@@ -592,21 +592,6 @@ ros2 pkg executables prius_adas_navigation
 ---
 
 ## 📸 Suggested GitHub Media
-
-### Screenshots
-
-| File | Show |
-|---|---|
-| `01_gazebo_prius.png` | Prius + simulation world |
-| `02_lane_detection.png` | Camera + lane result |
-| `03_lane_following.png` | Autonomous lane driving |
-| `04_slam_map.png` | SLAM map + vehicle pose |
-| `05_nav2_path.png` | RViz goal + global path |
-| `06_costmap.png` | Costmap around vehicle |
-| `07_obstacle_in_path.png` | Obstacle blocking route |
-| `08_replanned_path.png` | New path around obstacle |
-| `09_final_adas_scene.png` | Final project view |
-
 ### Videos
 
 ```text
