@@ -56,26 +56,6 @@ setup(
             glob("worlds/*"),
         ),
 
-        (
-            os.path.join(
-                "share",
-                package_name,
-                "urdf",
-            ),
-            glob("urdf/*"),
-        ),
-
-        (
-            os.path.join(
-                "share",
-                package_name,
-                "models",
-                "scaled_waffle_pi",
-            ),
-            glob(
-                "models/scaled_waffle_pi/*"
-            ),
-        ),
     ],
 
     install_requires=[
