@@ -565,7 +565,7 @@ prius_maps/
 ├── prius_figure8.posegraph
 └── prius_figure8.yaml
 
-````markdown
+```
 ## 🔍 Useful Debug Commands
 
 ```bash
