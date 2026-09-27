@@ -565,7 +565,7 @@ prius_maps/
 ├── prius_figure8.posegraph
 └── prius_figure8.yaml
 
-```text
+````markdown
 ## 🔍 Useful Debug Commands
 
 ```bash
@@ -587,7 +587,7 @@ ros2 topic echo /cmd_vel
 # Installed project executables
 ros2 pkg executables prius_adas_control
 ros2 pkg executables prius_adas_navigation
-```
+
 
 ## 📸 Suggested GitHub Media
 ### Videos
