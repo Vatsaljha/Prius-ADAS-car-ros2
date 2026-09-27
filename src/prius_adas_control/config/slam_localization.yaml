@@ -12,7 +12,7 @@ slam_toolbox:
 
     # Saved-map localization
     mode: localization
-    map_file_name: /home/vatsal/prius_maps/prius_figure8
+    map_file_name: /home/vatsal/prius_adas_ws/prius_maps/prius_figure8
     # This parameter is not supported for localization mode on the current
     # setup; keep it disabled.
     map_start_at_dock: false
