@@ -565,7 +565,7 @@ prius_maps/
 ├── prius_figure8.posegraph
 └── prius_figure8.yaml
 
-```markdown
+```text
 ## 🔍 Useful Debug Commands
 
 ```bash
@@ -587,16 +587,17 @@ ros2 topic echo /cmd_vel
 # Installed project executables
 ros2 pkg executables prius_adas_control
 ros2 pkg executables prius_adas_navigation
+```
 
 ## 📸 Suggested GitHub Media
 ### Videos
 
-```text
+```
 docs/videos/
 ├── 01_lane_following.mp4
 ├── 02_nav2_navigation.mp4
 └── 03_dynamic_obstacle_avoidance.mp4
-```text
+```
 
 The most useful final video is the dynamic-obstacle demo:
 
