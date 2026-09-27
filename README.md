@@ -588,8 +588,6 @@ ros2 topic echo /cmd_vel
 ros2 pkg executables prius_adas_control
 ros2 pkg executables prius_adas_navigation
 
----
-
 ## 📸 Suggested GitHub Media
 ### Videos
 
