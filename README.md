@@ -435,32 +435,101 @@ prius_adas_ws/
 ├── README.md
 ├── .gitignore
 │
-├── prius_adas_control/
-│   ├── config/
-│   ├── launch/
-│   ├── models/
-│   ├── prius_adas_control/
-│   │   ├── autonomous_driver.py
-│   │   ├── lane_detection.py
-│   │   └── nav2_cmd_to_prius.py
-│   ├── resource/
-│   ├── test/
-│   ├── urdf/
-│   ├── worlds/
-│   ├── package.xml
-│   ├── setup.cfg
-│   └── setup.py
-│
 ├── src/
-│   └── prius_adas_navigation/
-│       ├── prius_adas_navigation/
-│       │   ├── laser_scan_merger.py
-│       │   └── prius_odom_bridge.py
-│       ├── resource/
-│       ├── test/
-│       ├── package.xml
-│       ├── setup.cfg
-│       └── setup.py
+│   │
+│   ├── car_demo/
+│   │   ├── car_demo/
+│   │   │   └── __init__.py
+│   │   ├── env-hooks/
+│   │   ├── launch/
+│   │   │   ├── demo.launch.py
+│   │   │   └── spawn_prius.launch.py
+│   │   ├── models/
+│   │   │   ├── cloverleaf_interchange/
+│   │   │   ├── construction_cone/
+│   │   │   ├── dumpster/
+│   │   │   ├── gas_station/
+│   │   │   ├── grey_wall/
+│   │   │   ├── house_1/
+│   │   │   ├── house_2/
+│   │   │   ├── house_3/
+│   │   │   ├── jersey_barrier/
+│   │   │   ├── mcity/
+│   │   │   ├── powerplant/
+│   │   │   └── speed_limit_sign/
+│   │   ├── plugins/
+│   │   │   ├── PriusHybridPlugin.cc
+│   │   │   └── PriusHybridPlugin.hh
+│   │   ├── rviz/
+│   │   │   └── ros2.rviz
+│   │   ├── scripts/
+│   │   │   ├── joystick_translator.py
+│   │   │   └── prius_teleop_keyboard.py
+│   │   ├── worlds/
+│   │   │   └── mcity.world
+│   │   ├── CMakeLists.txt
+│   │   └── package.xml
+│   │
+│   ├── prius_adas_control/
+│   │   ├── config/
+│   │   │   ├── ackermann_nav_to_pose.xml
+│   │   │   ├── collision_monitor.yaml
+│   │   │   ├── nav2_params.yaml
+│   │   │   ├── prius_figure8_nav2.rviz
+│   │   │   ├── slam_localization.yaml
+│   │   │   └── slam_toolbox.yaml
+│   │   ├── launch/
+│   │   │   ├── nav2.launch.py
+│   │   │   ├── prius_adas_world.launch.py
+│   │   │   └── slam.launch.py
+│   │   ├── prius_adas_control/
+│   │   │   ├── autonomous_driver.py
+│   │   │   ├── lane_detection.py
+│   │   │   └── nav2_cmd_to_prius.py
+│   │   ├── resource/
+│   │   ├── test/
+│   │   ├── worlds/
+│   │   │   ├── adas_figure8.world
+│   │   │   ├── adas_figure8B_slam.world
+│   │   │   ├── adas_figure8_fixed.world1
+│   │   │   └── ...
+│   │   ├── package.xml
+│   │   ├── setup.cfg
+│   │   └── setup.py
+│   │
+│   ├── prius_adas_navigation/
+│   │   ├── prius_adas_navigation/
+│   │   │   ├── laser_scan_merger.py
+│   │   │   └── prius_odom_bridge.py
+│   │   ├── resource/
+│   │   ├── test/
+│   │   ├── package.xml
+│   │   ├── setup.cfg
+│   │   └── setup.py
+│   │
+│   ├── prius_description/
+│   │   ├── env-hooks/
+│   │   ├── meshes/
+│   │   ├── urdf/
+│   │   │   ├── prius.urdf
+│   │   │   ├── priusB.urdf
+│   │   │   ├── prius_updated.urdf
+│   │   │   └── ...
+│   │   ├── model.config
+│   │   ├── CMakeLists.txt
+│   │   └── package.xml
+│   │
+│   └── prius_msgs/
+│       ├── msg/
+│       │   └── Control.msg
+│       ├── CMakeLists.txt
+│       └── package.xml
+│
+├── prius_maps/
+│   ├── prius_figure8.data
+│   ├── prius_figure8.pgm
+│   ├── prius_figure8.posegraph
+│   └── prius_figure8.yaml
 │
 ├── docs/
 │   ├── architecture.md
@@ -470,6 +539,15 @@ prius_adas_ws/
 │   ├── reproduction.md
 │   ├── troubleshooting.md
 │   ├── images/
+│   │   ├── GazeboWorld.png
+│   │   ├── lane_detection.png
+│   │   ├── lane_following.png
+│   │   ├── slam_map.png
+│   │   ├── nav2_path1.png
+│   │   ├── costmap.png
+│   │   ├── obstacle_in_path.png
+│   │   ├── nav2_replan.png
+│   │   └── Prius.png
 │   └── videos/
 │
 └── tools/
