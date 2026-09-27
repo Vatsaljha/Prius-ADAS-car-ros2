@@ -642,6 +642,16 @@ https://docs.nav2.org/rolling/configuration_and_development/configuration_guide/
 
 ---
 
-## 👤 Author
+# Author
 
 **Vatsal Jha**
+
+GitHub:
+
+https://github.com/Vatsaljha
+
+---
+
+# License
+
+This project is released under the MIT License.
