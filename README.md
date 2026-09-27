@@ -124,7 +124,7 @@ LiDAR + Odometry / TF
 - RViz2
 - Python 3
 - OpenCV
-- Prius simulation dependency workspace at `~/prius_ws`
+- Prius simulation packages are included in this repository
 
 ### Build
 
@@ -132,8 +132,6 @@ LiDAR + Odometry / TF
 cd ~/prius_adas_ws
 
 source /opt/ros/humble/setup.bash
-source ~/prius_ws/install/setup.bash
-
 colcon build --symlink-install
 source ~/prius_adas_ws/install/setup.bash
 ```
@@ -143,6 +141,9 @@ Verify:
 ```bash
 ros2 pkg executables prius_adas_control
 ros2 pkg executables prius_adas_navigation
+ros2 pkg prefix prius_description
+ros2 pkg prefix prius_msgs
+ros2 pkg prefix car_demo
 ```
 
 ---
@@ -153,13 +154,12 @@ ros2 pkg executables prius_adas_navigation
 
 ```bash
 source /opt/ros/humble/setup.bash
-source ~/prius_ws/install/setup.bash
 source ~/prius_adas_ws/install/setup.bash
 
 ros2 launch prius_adas_control prius_adas_world.launch.py
 ```
 
-**What it does:** starts the Gazebo world, Prius, robot state publishing and navigation support nodes required by the simulation.
+**What it does:** starts Gazebo Classic, spawns the Prius, publishes the robot TF/state information, and starts the Prius odometry bridge required by the navigation stack.
 
 **Behind the concept:** this terminal creates the simulated vehicle, sensors, TF and odometry that the lane-following nodes consume.
 
@@ -167,7 +167,6 @@ ros2 launch prius_adas_control prius_adas_world.launch.py
 
 ```bash
 source /opt/ros/humble/setup.bash
-source ~/prius_ws/install/setup.bash
 source ~/prius_adas_ws/install/setup.bash
 
 ros2 run prius_adas_control lane_detection
@@ -184,7 +183,6 @@ https://resources.altium.com/p/lane-recognition-and-tracking-nvidia-jetson-nano
 
 ```bash
 source /opt/ros/humble/setup.bash
-source ~/prius_ws/install/setup.bash
 source ~/prius_adas_ws/install/setup.bash
 
 ros2 run prius_adas_control autonomous_driver
@@ -214,7 +212,7 @@ Prius Motion
 
 ---
 
-# 🧭 Part 2 — SLAM + Nav2 ADAS
+## 🧭 Part 2 — SLAM Localization + Nav2 ADAS
 
 ## Terminal 1 — Start Gazebo + Prius
 
@@ -226,7 +224,7 @@ ros2 launch prius_adas_control prius_adas_world.launch.py
 
 **What it does:** starts the simulation, vehicle, sensors, TF and odometry.
 
-## Terminal 2 — Start SLAM / Localization
+## Terminal 2 — Start SLAM Localization
 
 ```bash
 ros2 launch prius_adas_control slam.launch.py
@@ -237,11 +235,13 @@ ros2 launch prius_adas_control slam.launch.py
 **Behind the concept:** LiDAR scans are combined with motion information to estimate vehicle pose and build/use a 2D map.
 
 ```text
-LiDAR + Motion
-      ↓
- SLAM Toolbox
-      ↓
-Map + Robot Pose
+Saved SLAM Map + LiDAR + TF
+            ↓
+     SLAM Toolbox
+            ↓
+      Robot Pose
+            ↓
+           Nav2
 ```
 
 ## Terminal 3 — Start Nav2
@@ -554,7 +554,16 @@ prius_adas_ws/
     ├── add_slam_barriers.py
     └── clean_and_add_lidar.py
 ```
+## 🗺️ Saved SLAM Map
 
+The repository contains a saved SLAM Toolbox map used for localization:
+
+```text
+prius_maps/
+├── prius_figure8.data
+├── prius_figure8.pgm
+├── prius_figure8.posegraph
+└── prius_figure8.yaml
 ---
 
 ## 🔍 Useful Debug Commands
